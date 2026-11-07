@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#7a1f24">
+  <meta name="description" content="Sổ Tay Thám Tử: game suy luận phá án. Khám nghiệm hiện trường, vạch mâu thuẫn trong lời khai và tìm ra thủ phạm.">
+  <title>Sổ Tay Thám Tử</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Casebook ------------------------------------------------------------------------------ -->
+  <section class="screen home" id="home" aria-labelledby="home-title">
+    <header class="home-head">
+      <div class="logo" aria-hidden="true">🔍</div>
+      <h1 id="home-title">Sổ Tay Thám Tử</h1>
+      <p class="tagline">Quan sát. Nghi ngờ. Suy luận. Mọi manh mối đều nằm trước mắt bạn.</p>
+    </header>
+    <ol class="cases" id="case-list" aria-label="Danh sách vụ án"></ol>
+    <footer class="home-foot">
+      <button class="chip" id="home-sound" type="button">🔊 Âm thanh</button>
+      <button class="chip" id="home-music" type="button">🎵 Nhạc nền</button>
+      <button class="chip" id="home-howto" type="button">❓ Cách chơi</button>
+      <p class="credit">Vụ án 2 phỏng theo “The Speckled Band” của Arthur Conan Doyle (1892, phạm vi công cộng · Project Gutenberg). Các vụ án còn lại là sáng tác gốc.</p>
+    </footer>
+  </section>
+
+  <!-- Briefing ------------------------------------------------------------------------------ -->
+  <section class="screen briefing" id="briefing" hidden aria-labelledby="brief-title">
+    <article class="dossier">
+      <p class="stamp" id="brief-setting"></p>
+      <h2 id="brief-title"></h2>
+      <p class="brief-sub" id="brief-sub"></p>
+      <div class="brief-text" id="brief-text"></div>
+      <div class="buttons" id="brief-buttons"></div>
+    </article>
+  </section>
+
+  <!-- Investigation ------------------------------------------------------------------------- -->
+  <section class="screen game" id="game" hidden>
+    <header class="topbar">
+      <button class="icon-btn" id="back-btn" type="button" title="Về sổ hồ sơ" aria-label="Về sổ hồ sơ">←</button>
+      <div class="case-name">
+        <strong id="case-title"></strong>
+        <span id="case-progress"></span>
+      </div>
+      <div class="credibility" id="credibility" role="img"></div>
+      <button class="icon-btn" id="hint-btn" type="button" title="Gợi ý của trợ lý (giảm xếp hạng)">💡</button>
+      <button class="icon-btn" id="sound-btn" type="button" title="Âm thanh" aria-label="Âm thanh">🔊</button>
+    </header>
+
+    <nav class="tabs" role="tablist" aria-label="Khu vực điều tra">
+      <button role="tab" type="button" data-tab="scenes" id="tab-scenes">🔎<span>Hiện trường</span></button>
+      <button role="tab" type="button" data-tab="people" id="tab-people">🗣️<span>Nhân chứng</span><i class="dot" hidden></i></button>
+      <button role="tab" type="button" data-tab="notebook" id="tab-notebook">📓<span>Sổ tay</span><b class="count" id="clue-count">0</b></button>
+      <button role="tab" type="button" data-tab="accuse" id="tab-accuse">⚖️<span>Buộc tội</span></button>
+    </nav>
+
+    <main class="panel-area" id="panel" role="tabpanel" tabindex="-1"></main>
+  </section>
+
+  <dialog class="dialog" id="dialog" aria-labelledby="dialog-title"></dialog>
+  <div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
