@@ -29,6 +29,8 @@ and can be restarted.
 | FR-12 | **Persistence:** an unfinished case resumes where it was left; solved cases and best ranks are saved on the device. |
 | FR-13 | Sound effects and quiet background music, each with an on/off switch. |
 | FR-14 | Mouse, touch and keyboard (all actions are buttons; tab order is logical). |
+| FR-15 | **Scene map:** while inspecting a scene, a floor plan of the case shows every place as a room. The room being inspected is highlighted, and each point of interest is a numbered marker at its real position, numbered like its button in the list. Clicking a room opens it; clicking a marker examines that point. Places not yet open show as "?". The map can be hidden. |
+| FR-16 | **Read aloud:** an on/off switch (home screen, top bar, key `V`) reads the briefing, the place and its points, every examination result, witness profiles and statements, confrontation results, hints, dialogs and endings in a Vietnamese voice. A 🔊 button reads one block on demand, `R` reads the focused item or repeats, `Esc` stops, and the reading speed is adjustable. Music is lowered while reading. |
 
 ## Content requirements
 
@@ -48,9 +50,9 @@ and can be restarted.
 | NFR-3 | **Every case is provably fair:** an automated solver proves the case can be solved from the start with zero mistakes, every clue can be reached, and the solution's support is reachable (see the fair-play rules). |
 | NFR-4 | Case data is validated: unique ids, every reference resolves, exactly one answer per question. |
 | NFR-5 | Responsive from 360 px phones to desktop with no horizontal overflow. Light and dark theme. |
-| NFR-6 | Accessible: semantic buttons, visible focus, status not shown by colour alone, `aria-live` for new clues. |
+| NFR-6 | Accessible: semantic buttons, visible focus, status not shown by colour alone, `aria-live` for new clues. **Blind and low-vision players:** everything can be read aloud (FR-16), and the map only repeats what the lists already say. **Deaf and hard-of-hearing players:** no information is given by sound alone; every sound has a text or visual equivalent (toast, flash, shaking credibility, result box). |
 | NFR-7 | CI runs the tests on every push. GitHub Pages deploys from `main`. |
 
 ## Out of scope (v1)
 
-Voice acting, branching endings, a case editor UI, online leaderboards.
+Recorded voice acting (read-aloud uses the browser's speech synthesis), branching endings, a case editor UI, online leaderboards.

@@ -36,12 +36,21 @@ export function setMuted(value) {
 
 export const isMuted = () => muted;
 
+let ducked = false;
+const musicLevel = () => (musicOn ? MUSIC_GAIN * (ducked ? 0.25 : 1) : 0);
+
 export function setMusic(value) {
   musicOn = value;
-  if (musicBus) musicBus.gain.value = musicOn ? MUSIC_GAIN : 0;
+  if (musicBus) musicBus.gain.value = musicLevel();
 }
 
 export const isMusicOn = () => musicOn;
+
+/** Lower the music while the game reads text aloud. */
+export function duckMusic(value) {
+  ducked = Boolean(value);
+  if (musicBus && context) musicBus.gain.setTargetAtTime(musicLevel(), context.currentTime, 0.15);
+}
 
 const hz = (semitones) => 440 * 2 ** (semitones / 12);
 

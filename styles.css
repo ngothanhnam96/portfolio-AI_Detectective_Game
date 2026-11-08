@@ -424,6 +424,13 @@ kbd { padding: 1px 6px; border: 1px solid var(--line); border-bottom-width: 2px;
 
 .toasts { position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 30; display: grid; gap: 8px; transform: translateX(-50%); width: min(440px, calc(100% - 32px)); pointer-events: none; }
 .toast { padding: 10px 16px; border-radius: 12px; background: var(--ink); color: var(--paper); font-weight: 600; box-shadow: var(--shadow); animation: rise 0.25s ease-out; }
+.toast-action { pointer-events: auto; margin-left: 6px; padding: 4px 10px; border: 1px solid currentColor; border-radius: 999px; background: transparent; color: inherit; font: inherit; font-size: 0.88rem; cursor: pointer; }
+.toast-action:hover, .toast-action:focus-visible { background: var(--paper); color: var(--ink); }
+.chip.warn { border-color: var(--accent); color: var(--accent); }
+.voice-picker { margin: 0 0 12px; padding: 0; border: 0; }
+.voice-more { margin-top: 4px; color: var(--ink-2); }
+.voice-more summary { cursor: pointer; font-weight: 600; }
+.voice-more .howto { margin-top: 8px; }
 
 .flash {
   position: fixed;
@@ -444,6 +451,94 @@ kbd { padding: 1px 6px; border: 1px solid var(--line); border-bottom-width: 2px;
   100% { opacity: 0; transform: scale(0.95) rotate(-6deg); }
 }
 
+/* Scene map and read-aloud ------------------------------------------------------------------ */
+
+.banner-tools { margin-left: auto; display: flex; align-items: center; gap: 8px; flex: none; }
+.map-toggle[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.icon-btn.small { width: 34px; height: 34px; font-size: 0.95rem; border-radius: 8px; }
+.icon-btn.on, #speech-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+.scene.with-map { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 54%); gap: 20px; align-items: start; }
+.scene-text { min-width: 0; }
+.spot { display: flex; align-items: center; gap: 8px; }
+.spot-no {
+  display: grid; place-items: center; flex: none;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--accent); color: var(--accent-ink); font: 700 0.8rem var(--sans);
+}
+.spot.examined .spot-no { background: var(--line); color: var(--ink); }
+.spot.hot, .spot:focus-visible { background: var(--accent-soft); }
+
+.floorplan { margin: 0; position: sticky; top: 78px; }
+.plan-here { margin: 0 0 6px; font-size: 0.85rem; color: var(--ink-2); }
+.plan-here strong { color: var(--accent); }
+.floorplan figcaption { margin-top: 6px; font-size: 0.78rem; color: var(--ink-2); }
+.plan {
+  position: relative;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background:
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 5% 7.8125%,
+    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 5% 7.8125%,
+    var(--paper-2);
+  background-blend-mode: normal;
+  overflow: hidden;
+}
+.plan::before { content: ""; position: absolute; inset: 0; background: var(--paper-2); opacity: 0.72; pointer-events: none; }
+.room {
+  position: absolute;
+  display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;
+  padding: 3px 5px;
+  border: 2px solid var(--ink-2);
+  border-radius: 3px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 600 clamp(0.58rem, 1.1vw, 0.74rem) / 1.15 var(--sans);
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+}
+.room:hover { background: var(--accent-soft); }
+.room.active { border-color: var(--accent); border-width: 3px; background: color-mix(in srgb, var(--accent-soft) 70%, var(--paper)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); z-index: 1; }
+.room.cleared:not(.active) { color: var(--ink-2); }
+.room.locked { border-style: dashed; background: transparent; color: var(--ink-2); cursor: default; justify-content: center; align-items: center; font-size: 1rem; }
+.room-name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.room-meta { font-weight: 400; color: var(--ink-2); font-size: 0.9em; }
+.plan-label { position: absolute; transform: translate(-50%, -50%); font: italic 0.68rem var(--serif); color: var(--ink-2); white-space: nowrap; pointer-events: none; }
+.marker {
+  position: absolute; z-index: 2;
+  width: 26px; height: 26px; margin: -13px 0 0 -13px;
+  display: grid; place-items: center;
+  border: 2px solid var(--paper); border-radius: 50%;
+  background: var(--accent); color: var(--accent-ink);
+  font: 700 0.78rem var(--sans);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.35);
+  cursor: pointer;
+}
+.marker.examined { background: var(--paper); color: var(--ink); border-color: var(--ink-2); }
+.marker.hot, .marker:hover { transform: scale(1.25); outline: 3px solid var(--focus); outline-offset: 1px; }
+.marker.recent { animation: ping 1.2s ease-out 2; }
+.pin { position: absolute; z-index: 1; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%; background: var(--accent); opacity: 0.7; pointer-events: none; }
+.pin.examined { background: var(--ink-2); opacity: 0.45; }
+@keyframes ping {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 70%, transparent); }
+  100% { box-shadow: 0 0 0 14px transparent; }
+}
+
+.result { position: relative; }
+.result > .listen { position: absolute; top: 10px; right: 10px; }
+.result > .listen ~ .result-title { padding-right: 40px; }
+.statement { position: relative; }
+.statement > .listen { position: absolute; top: 10px; right: 10px; }
+.statement > .listen ~ blockquote { padding-right: 40px; }
+.profile > .listen { margin-left: auto; flex: none; }
+
+@media (max-width: 1100px) {
+  .scene.with-map { grid-template-columns: 1fr; }
+  .floorplan { position: static; order: -1; max-width: 560px; }
+}
+
 /* Responsive ------------------------------------------------------------------------------- */
 
 @media (max-width: 760px) {
@@ -460,6 +555,8 @@ kbd { padding: 1px 6px; border: 1px solid var(--line); border-bottom-width: 2px;
   .toasts { bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
   .deduce-bar { top: 64px; }
   .profile { flex-direction: column; }
+  .banner { flex-wrap: wrap; }
+  .banner h2 { flex: 1 1 55%; min-width: 0; }
 }
 
 @media (max-width: 420px) {

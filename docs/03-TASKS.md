@@ -17,6 +17,8 @@
 | T-11 | Code-drawn portraits, responsive layout, dark theme, a11y             | NFR-1, NFR-5, NFR-6  | ✅ |
 | T-12 | Sound effects + music loop with toggles                               | FR-13                | ✅ |
 | T-13 | Static dev server, CI, GitHub Pages                                   | NFR-7                | ✅ |
+| T-18 | Scene map: plan data for 3 cases, validator rules, renderer, list ↔ marker highlight | FR-15, NFR-6 | ✅ |
+| T-19 | Read aloud: speech module, Vietnamese voice choice, 🔊 buttons, keys V/R/Esc, speed, music ducking | FR-16, NFR-6 | ✅ |
 | T-14 | More public-domain adaptations (e.g. "The Red-Headed League", "Silver Blaze") | —            | ⏭ |
 | T-15 | Case editor page that runs the validator live                         | —                    | ⏭ |
 | T-16 | English translation (cases are data, so UI strings need extracting)   | —                    | ⏭ |

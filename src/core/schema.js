@@ -3,6 +3,7 @@
  * fair-play rules (see docs/00-RESEARCH.md). Returns a list of human-readable errors.
  */
 
+import { planErrors } from "./floorplan.js";
 import { explore, solve } from "./solver.js";
 
 const CLUE_KINDS = ["evidence", "testimony", "deduction"];
@@ -122,6 +123,9 @@ export function validateStructure(c) {
   // Fair play: the culprit is present from the start
   const culprit = c.suspects.find((s) => s.id === truth.culprit);
   if (culprit && list(culprit.requires).length) fail("luật chơi đẹp: thủ phạm phải xuất hiện ngay từ đầu");
+
+  // Floor plan: optional, but complete and tidy when present
+  for (const message of planErrors(c)) fail(message);
 
   return errors;
 }

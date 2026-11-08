@@ -10,6 +10,10 @@ presenting evidence against witness statements, combine clues into deductions, t
   gives the answer away
 - **Every case is provably fair:** an automated solver proves each case can be solved with zero
   mistakes, every clue is reachable, and the player can never get stuck
+- **Scene map:** a floor plan of each case. The room being inspected is highlighted and every
+  point of interest is a numbered marker at its real spot
+- **Read aloud** for blind and low-vision players: a Vietnamese voice reads everything (browser
+  speech, no audio files). Every sound also has a visual cue for deaf players
 - Mouse, touch and keyboard · light and dark theme · progress saved on the device ·
   synthesised sound and music
 - Zero dependencies, no build step, no asset files (portraits are code-drawn SVG)
@@ -26,12 +30,14 @@ npm start      # http://127.0.0.1:5173
 | `←` `→` on the tab bar | Move between tabs |
 | `H` | Hint |
 | `M` | Sound on/off |
-| `Esc` | Close a dialog |
+| `V` | Read aloud on/off |
+| `R` | Read the focused item, or repeat the last reading |
+| `Esc` | Close a dialog · stop reading |
 
 ## Test
 
 ```bash
-npm test       # 63 tests, ~0.2 s
+npm test       # 80 tests, ~0.3 s
 ```
 
 ## Project layout
@@ -39,11 +45,13 @@ npm test       # 63 tests, ~0.2 s
 ```text
 index.html, styles.css         UI shell
 src/main.js                    screens, tabs, dialogs, toasts, persistence
-src/ui/                        portrait.js (SVG suspects) · audio.js · storage.js
+src/ui/                        portrait.js (SVG suspects) · floorplan.js (scene map) · speech.js (read aloud)
+                               audio.js · storage.js · analytics.js
 src/core/                      pure rules and data (no DOM), fully unit-tested
   investigation.js             examine, interview, present, deduce, accuse, score, save
   solver.js                    the assistant: next step, solve, explore (hints + proofs)
   schema.js                    validation and fair-play rules
+  floorplan.js                 plan geometry and its validation
   cases/                       one data file per case
 tests/                         node:test suites + a mini case
 scripts/serve.mjs              zero-dependency static dev server
@@ -70,3 +78,9 @@ The tests validate it and prove it fair automatically.
   tricks (staged time, receipt alibis, thread-locked rooms) are common ideas of the detective genre.
   No characters or stories from copyrighted series are used.
 - Code licensed under MIT.
+
+## Analytics
+
+Optional, anonymous play counts via [GoatCounter](https://www.goatcounter.com): no cookies and no
+personal data. It is off until you set `GOATCOUNTER_CODE` in `src/ui/analytics.js`. Events are
+sent when a game starts and when it ends; see the `track(...)` calls in `src/main.js`.

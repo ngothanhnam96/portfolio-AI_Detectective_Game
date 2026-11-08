@@ -100,6 +100,40 @@ clues → accuse once every `support` clue is known. The same function powers:
 - Saves: `case:<id>` (investigation JSON plus heard statements) after every action;
   `progress` = best rank per solved case.
 
+## Scene map (FR-15)
+
+- Data: each location has `area: [x, y, w, h]` on a 100 × 64 plan, each hotspot has
+  `at: [x, y]` as a percentage of its room, and `map.labels` adds street or floor names. The
+  plan is optional in the schema, but when present `planErrors` (in `src/core/floorplan.js`)
+  requires it to be complete: rooms inside the frame, no overlaps, a minimum room size, markers
+  away from walls and at least 7 units apart so they never overlap on screen.
+- The layout follows the story. In "The Speckled Band" Julia's room shares a wall with the
+  doctor's: the ventilator is on that wall and the doctor's chair stands right under it on the
+  other side. In the locked room, the key and the door gap are at the study door, next to the
+  hall threshold where the fishing line is found. Tests check these facts.
+- `src/ui/floorplan.js` returns HTML (no DOM, tested in Node). Rooms and markers are absolutely
+  positioned buttons. The inspected room is highlighted and has no inner label (its name is shown
+  above the map), so markers never cover text. Other rooms show small pins for their points.
+  Hovering or focusing a point in the list lights up its marker, and the other way round. The
+  last examined marker pulses.
+- Desktop: the map sits beside the text (sticky). ≤ 1100 px: above the list. The map is
+  `aria-hidden` and its buttons are out of the tab order, because it repeats the lists, which
+  stay the accessible path.
+
+## Read aloud (FR-16)
+
+- `src/ui/speech.js` wraps the Web Speech API. No audio files and no online service: the
+  browser's own voices are used. `pickVoice` prefers natural Vietnamese voices (Edge on Windows
+  ships "Hoài My" and "Nam Minh"), then any `vi` voice. Without one, the browser's default is used
+  and the player is told how to install one.
+- `speakable` strips emoji, quote marks and symbols so the voice never reads them out.
+  `sentences` joins parts with full stops so it pauses between them. `chunks` splits long text
+  at sentence boundaries (≤ 180 characters) because some browsers stop long utterances.
+- Off by default, because screen-reader users already hear the page. Each action reads its own
+  result: a new action interrupts the previous reading. Toasts about new clues are not read
+  because the result already lists them. Closing a dialog stops its reading.
+- Music is lowered to 25 % while speaking (`duckMusic`).
+
 ## Risks
 
 | Risk | Mitigation |
@@ -109,3 +143,6 @@ clues → accuse once every `support` clue is known. The same function powers:
 | Hints give the answer away | Hints name where to look, never which clue to present |
 | Copyright | Adaptation only of a public-domain text, credited. Conan-style tricks only as ideas. A test forbids names from copyrighted series |
 | Old save after a content change | Restore drops unknown clue ids. A broken save starts the case fresh |
+| A map edit puts a marker in the wrong room or on top of another | `planErrors` in the validator, plus tests that every marker lies inside its own room only |
+| No Vietnamese voice on the device | Falls back to the default voice with a notice; "How to play" explains how to add one |
+| Read-aloud doubles a screen reader | Off by default; the screen-reader path (aria-live, labels) is unchanged |
